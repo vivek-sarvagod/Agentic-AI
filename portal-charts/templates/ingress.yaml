@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: portal-survey-ingress
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey
+    app.kubernetes.io/part-of: portal-survey
+  annotations:
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  rules:
+    - {{- if .Values.ingress.host }}
+      host: {{ .Values.ingress.host }}
+      {{- end }}
+      http:
+        paths:
+          - path: /agent/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: portal-survey-agent
+                port:
+                  number: {{ .Values.agent.service.port }}
+          - path: /api/(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: portal-survey-api
+                port:
+                  number: {{ .Values.api.service.port }}
+          - path: /(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: portal-survey-ui
+                port:
+                  number: {{ .Values.ui.service.port }}
+{{- end }}

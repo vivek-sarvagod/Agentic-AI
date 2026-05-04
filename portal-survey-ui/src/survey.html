@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Survey | Vivek Sarvagod</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ==================== ICON BAR ==================== -->
+    <aside class="icon-bar">
+        <a href="index.html" class="brand">VS</a>
+        <ul class="icon-bar-nav">
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="index.html" title="Home">
+                    <i class="bi bi-house-door"></i>
+                    <span class="tooltip-text">Home</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="portfolio.html" title="Portfolio">
+                    <i class="bi bi-person-badge"></i>
+                    <span class="tooltip-text">Portfolio</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link active" href="survey.html" title="Student Survey">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span class="tooltip-text">Student Survey</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="contact.html" title="Contact">
+                    <i class="bi bi-envelope"></i>
+                    <span class="tooltip-text">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ==================== NAVIGATION PANEL ==================== -->
+    <aside class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <h4>VSTech Solutions</h4>
+            <span>Personal Dashboard</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Main Navigation</div>
+            <ul class="nav-menu">
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="index.html">
+                        <i class="bi bi-house-door"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="portfolio.html">
+                        <i class="bi bi-person-vcard"></i>
+                        Portfolio
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link active" href="survey.html">
+                        <i class="bi bi-ui-checks"></i>
+                        Student Survey
+                        <!-- <span class="badge bg-success">Form</span> -->
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="contact.html">
+                        <i class="bi bi-envelope"></i>
+                        Contact
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Quick Links</div>
+            <ul class="nav-menu">
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="https://github.com" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub Profile
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="https://linkedin.com" target="_blank">
+                        <i class="bi bi-linkedin"></i>
+                        LinkedIn
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- User Info at bottom -->
+        <div class="nav-user">
+            <div class="nav-user-info">
+                <div class="nav-user-avatar">VS</div>
+                <div class="nav-user-details">
+                    <div class="name">Vivek Sarvagod</div>
+                    <div class="role">Software Architect</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==================== MAIN WRAPPER ==================== -->
+    <div class="main-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleNavPanel()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <nav class="breadcrumb-nav">
+                    <a href="index.html">Home</a>
+                    <span>/</span>
+                    <span class="current">Student Survey</span>
+                </nav>
+            </div>
+            <!-- <div class="header-right">
+                <button class="header-btn" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">2</span>
+                </button>
+                <button class="header-btn" title="Messages">
+                    <i class="bi bi-chat-dots"></i>
+                </button>
+                <button class="header-btn" title="Settings">
+                    <i class="bi bi-gear"></i>
+                </button>
+            </div> -->
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="survey-container">
+                <div class="survey-card">
+                    <div class="survey-header">
+                        <h2><i class="bi bi-mortarboard-fill me-2"></i>Student Survey Form</h2>
+                        <p>Help us improve by sharing your feedback about our campus</p>
+                    </div>
+
+                    <div class="survey-body">
+                        <!-- Alert for form submission -->
+                        <div id="formAlert" class="alert d-none mb-4" role="alert"></div>
+
+                        <form id="surveyForm" onsubmit="return validateAndSubmit(event)">
+                            <!-- Personal Information Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-person-fill"></i>Personal Information
+                                </h5>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">First Name <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="firstName" name="firstName" required placeholder="Enter your first name">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">Last Name <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="lastName" name="lastName" required placeholder="Enter your last name">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="streetAddress" class="form-label">Street Address <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="streetAddress" name="streetAddress" required placeholder="Enter your street address">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="city" class="form-label">City <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="city" name="city" required placeholder="City">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="state" class="form-label">State <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="state" name="state" required placeholder="State">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="zip" class="form-label">Zip Code <span class="required">*</span></label>
+                                        <input type="text" class="form-control" id="zip" name="zip" required placeholder="Zip" pattern="[0-9]{5}" title="Please enter a valid 5-digit zip code">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="telephone" class="form-label">Telephone Number <span class="required">*</span></label>
+                                        <input type="tel" class="form-control" id="telephone" name="telephone" required placeholder="(123) 456-7890">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">E-mail Address <span class="required">*</span></label>
+                                        <input type="email" class="form-control" id="email" name="email" required placeholder="your-email@example.com">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="surveyDate" class="form-label">Date of Survey <span class="required">*</span></label>
+                                        <input type="date" class="form-control" id="surveyDate" name="surveyDate" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Campus Preferences Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-building"></i>What did you like most about the campus?
+                                </h5>
+                                <p class="form-text mb-3">Select all that apply:</p>
+                                <div class="checkbox-grid">
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="students" id="likeStudents" name="campusLikes">
+                                        <label class="form-check-label" for="likeStudents">
+                                            <i class="bi bi-people me-1"></i>Students
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="location" id="likeLocation" name="campusLikes">
+                                        <label class="form-check-label" for="likeLocation">
+                                            <i class="bi bi-geo-alt me-1"></i>Location
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="campus" id="likeCampus" name="campusLikes">
+                                        <label class="form-check-label" for="likeCampus">
+                                            <i class="bi bi-building me-1"></i>Campus
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="atmosphere" id="likeAtmosphere" name="campusLikes">
+                                        <label class="form-check-label" for="likeAtmosphere">
+                                            <i class="bi bi-sun me-1"></i>Atmosphere
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="dormRooms" id="likeDormRooms" name="campusLikes">
+                                        <label class="form-check-label" for="likeDormRooms">
+                                            <i class="bi bi-house-door me-1"></i>Dorm Rooms
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input class="form-check-input" type="checkbox" value="sports" id="likeSports" name="campusLikes">
+                                        <label class="form-check-label" for="likeSports">
+                                            <i class="bi bi-trophy me-1"></i>Sports
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- How did you hear about us Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-megaphone"></i>How did you become interested in the university?
+                                </h5>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input class="form-check-input" type="radio" name="interestSource" id="sourceFriends" value="friends">
+                                        <label class="form-check-label" for="sourceFriends">
+                                            <i class="bi bi-people-fill me-1"></i>Friends
+                                        </label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input class="form-check-input" type="radio" name="interestSource" id="sourceTV" value="television">
+                                        <label class="form-check-label" for="sourceTV">
+                                            <i class="bi bi-tv me-1"></i>Television
+                                        </label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input class="form-check-input" type="radio" name="interestSource" id="sourceInternet" value="internet">
+                                        <label class="form-check-label" for="sourceInternet">
+                                            <i class="bi bi-globe me-1"></i>Internet
+                                        </label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input class="form-check-input" type="radio" name="interestSource" id="sourceOther" value="other">
+                                        <label class="form-check-label" for="sourceOther">
+                                            <i class="bi bi-three-dots me-1"></i>Other
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recommendation Likelihood Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-star"></i>Likelihood of Recommendation
+                                </h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="recommendation" class="form-label">How likely are you to recommend this school to other prospective students?</label>
+                                        <select class="form-select" id="recommendation" name="recommendation">
+                                            <option value="">-- Select an option --</option>
+                                            <option value="veryLikely">Very Likely</option>
+                                            <option value="likely">Likely</option>
+                                            <option value="unlikely">Unlikely</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Raffle Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-ticket-perforated"></i>Raffle Entry
+                                </h5>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="raffle" class="form-label">Enter Your Raffle Numbers</label>
+                                        <input type="text" class="form-control" id="raffle" name="raffle" placeholder="e.g., 5, 12, 23, 34, 45, 56, 67, 78, 89, 99">
+                                        <div class="form-text mt-2">
+                                            <i class="bi bi-info-circle me-1"></i>Enter at least 10 comma-separated numbers between 1 and 100. Winners will receive a free movie ticket!
+                                        </div>
+                                        <div id="raffleError" class="text-danger mt-2 d-none"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Comments Section -->
+                            <div class="form-section">
+                                <h5 class="section-title">
+                                    <i class="bi bi-chat-left-text"></i>Additional Comments
+                                </h5>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <label for="comments" class="form-label">Share your thoughts, suggestions, or feedback</label>
+                                        <textarea class="form-control" id="comments" name="comments" rows="5" placeholder="Enter any additional comments here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="d-flex justify-content-end gap-3 mt-4 pt-3">
+                                <button type="button" class="btn btn-outline-secondary" onclick="resetForm()">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </button>
+                                <button type="submit" class="btn btn-teal">
+                                    <i class="bi bi-send me-2"></i>Submit Survey
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="page-footer">
+                    <p class="mb-0">© 2026 George Mason University Student Survey</p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Set today's date as default for survey date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('surveyDate').value = today;
+
+            // Live validation for raffle field
+            document.getElementById('raffle').addEventListener('blur', function() {
+                validateRaffle(this.value);
+            });
+        });
+    </script>
+</body>
+</html>

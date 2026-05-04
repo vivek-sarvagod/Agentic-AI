@@ -1,0 +1,9 @@
+apiVersion: v2
+name: portal-survey
+description: Helm chart for Portal Survey — Rancher RKE2 Academic Setup
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Vivek Sarvagod
+    email: vsarvago@gmu.edu

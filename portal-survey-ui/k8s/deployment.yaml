@@ -1,0 +1,55 @@
+# SWE645 HW2 - Kubernetes Deployment Manifest
+# Vivek Sarvagod | Course: SWE-645-001 | Homework Assignment#2
+# Purpose: Deploys viveksarvagod/645-assignment-2 on Rancher RKE2 with 3 replicas.
+#          Kubernetes automatically replaces any deleted pod to maintain 3 running.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swe645-deployment
+  namespace: default
+  labels:
+    app: swe645-app
+    owner: viveksarvagod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: swe645-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: swe645-app
+    spec:
+      containers:
+        - name: swe645-container
+          image: viveksarvagod/645-assignment-2:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 3

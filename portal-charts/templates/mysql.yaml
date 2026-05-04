@@ -1,0 +1,110 @@
+{{- if .Values.mysql.enabled }}
+# ============================================================
+#  MySQL PersistentVolumeClaim — stores database files
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: portal-survey-mysql-pvc
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey-mysql
+    app.kubernetes.io/part-of: portal-survey
+spec:
+  accessModes:
+    - ReadWriteOnce
+  {{- if .Values.mysql.storage.storageClassName }}
+  storageClassName: {{ .Values.mysql.storage.storageClassName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.mysql.storage.size }}
+---
+# ============================================================
+#  MySQL Deployment — single replica, persistent storage
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-survey-mysql
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey-mysql
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: portal-survey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: portal-survey-mysql
+  strategy:
+    type: Recreate      # MySQL can't do RollingUpdate with a single PVC
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: portal-survey-mysql
+        app.kubernetes.io/component: database
+        app.kubernetes.io/part-of: portal-survey
+    spec:
+      containers:
+        - name: mysql
+          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          ports:
+            - containerPort: 3306
+              name: mysql
+          envFrom:
+            - secretRef:
+                name: portal-survey-db-secrets
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+          resources:
+            {{- toYaml .Values.mysql.resources | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - -h
+                - localhost
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: portal-survey-mysql-pvc
+---
+# ============================================================
+#  MySQL Service — internal DNS: portal-survey-mysql:3306
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: portal-survey-mysql
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey-mysql
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: portal-survey
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.mysql.service.port }}
+      targetPort: 3306
+      protocol: TCP
+      name: mysql
+  selector:
+    app.kubernetes.io/name: portal-survey-mysql
+{{- end }}

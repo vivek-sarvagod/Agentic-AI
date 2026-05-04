@@ -1,0 +1,22 @@
+# SWE645 HW2 - Kubernetes Service Manifest
+# Vivek Sarvagod | Course: SWE-645-001 | Homework Assignment#2
+# Purpose: Exposes the deployment via NodePort.
+#          App accessible at: http://3.228.119.194:30080
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: swe645-service
+  namespace: default
+  labels:
+    app: swe645-app
+spec:
+  type: NodePort
+  selector:
+    app: swe645-app
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30080

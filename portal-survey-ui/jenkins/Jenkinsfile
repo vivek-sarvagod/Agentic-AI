@@ -1,0 +1,109 @@
+// SWE645 HW2 - Jenkinsfile
+// Vivek Sarvagod | Course: SWE-645-001 | Homework Assignment#2
+// Purpose: CI/CD pipeline — builds Docker image on every GitHub push, pushes to
+//          Docker Hub, and deploys to Rancher RKE2 Kubernetes via rolling update.
+
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_USER  = "viveksarvagod"
+        IMAGE_NAME       = "645-assignment-2"
+        DOCKER_IMAGE     = "${DOCKER_HUB_USER}/${IMAGE_NAME}"
+        DOCKER_TAG       = "v${BUILD_NUMBER}"
+        K8S_DEPLOYMENT   = "swe645-deployment"
+        K8S_CONTAINER    = "swe645-container"
+        K8S_NAMESPACE    = "default"
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "=== STAGE 1: Checkout ==="
+                echo "Branch: ${env.GIT_BRANCH} | Commit: ${env.GIT_COMMIT?.take(8)}"
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "=== STAGE 2: Build Docker Image ==="
+                sh """
+                    docker build -f docker/Dockerfile \
+                        -t ${DOCKER_IMAGE}:${DOCKER_TAG} \
+                        -t ${DOCKER_IMAGE}:latest \
+                        .
+                    docker images | grep ${IMAGE_NAME}
+                """
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                echo "=== STAGE 3: Push to Docker Hub ==="
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker push ${DOCKER_IMAGE}:latest
+                        echo "Pushed: ${DOCKER_IMAGE}:${DOCKER_TAG}"
+                        docker logout
+                    """
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo "=== STAGE 4: Deploy to Rancher Kubernetes ==="
+                withCredentials([file(
+                    credentialsId: 'kubeconfig-credentials',
+                    variable: 'KUBECONFIG'
+                )]) {
+                    sh """
+                        echo "--- Cluster nodes ---"
+                        kubectl get nodes
+
+                        echo "--- Applying manifests ---"
+                        kubectl apply -f k8s/deployment.yaml
+                        kubectl apply -f k8s/service.yaml
+
+                        echo "--- Rolling out new image ---"
+                        kubectl set image deployment/${K8S_DEPLOYMENT} \
+                            ${K8S_CONTAINER}=${DOCKER_IMAGE}:${DOCKER_TAG} \
+                            -n ${K8S_NAMESPACE}
+
+                        echo "--- Waiting for rollout (timeout 5min) ---"
+                        kubectl rollout status deployment/${K8S_DEPLOYMENT} \
+                            -n ${K8S_NAMESPACE} \
+                            --timeout=300s
+
+                        echo "--- Running pods ---"
+                        kubectl get pods -l app=swe645-app -n ${K8S_NAMESPACE}
+
+                        echo "--- Service ---"
+                        kubectl get service swe645-service -n ${K8S_NAMESPACE}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "SUCCESS: Build #${BUILD_NUMBER} — ${DOCKER_IMAGE}:${DOCKER_TAG} deployed to Rancher"
+        }
+        failure {
+            echo "FAILED: Build #${BUILD_NUMBER} — check Console Output for details"
+        }
+        always {
+            sh 'docker logout || true'
+            sh 'docker image prune -f || true'
+        }
+    }
+}

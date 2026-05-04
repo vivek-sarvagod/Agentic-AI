@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivek Sarvagod | Principal Software Engineer</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- ==================== ICON BAR ==================== -->
+    <aside class="icon-bar">
+        <a href="index.html" class="brand">VS</a>
+        <ul class="icon-bar-nav">
+            <li class="icon-bar-item">
+                <a class="icon-bar-link active" href="index.html" title="Home">
+                    <i class="bi bi-house-door"></i>
+                    <span class="tooltip-text">Home</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="portfolio.html" title="Portfolio">
+                    <i class="bi bi-person-badge"></i>
+                    <span class="tooltip-text">Portfolio</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="survey.html" title="Student Survey">
+                    <i class="bi bi-clipboard-data"></i>
+                    <span class="tooltip-text">Student Survey</span>
+                </a>
+            </li>
+            <li class="icon-bar-item">
+                <a class="icon-bar-link" href="contact.html" title="Contact">
+                    <i class="bi bi-envelope"></i>
+                    <span class="tooltip-text">Contact</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ==================== NAVIGATION PANEL ==================== -->
+    <aside class="nav-panel" id="navPanel">
+        <div class="nav-panel-header">
+            <h4>VSTech Solutions</h4>
+            <span>Personal Dashboard</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Main Navigation</div>
+            <ul class="nav-menu">
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link active" href="index.html">
+                        <i class="bi bi-house-door"></i>
+                        Home
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="portfolio.html">
+                        <i class="bi bi-person-vcard"></i>
+                        Portfolio
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="survey.html">
+                        <i class="bi bi-ui-checks"></i>
+                        Student Survey
+                        <!-- <span class="badge bg-success">Form</span> -->
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="contact.html">
+                        <i class="bi bi-envelope"></i>
+                        Contact
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Quick Links</div>
+            <ul class="nav-menu">
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="https://github.com/vivek-sarvagod?tab=repositories" target="_blank">
+                        <i class="bi bi-github"></i>
+                        GitHub Profile
+                    </a>
+                </li>
+                <li class="nav-menu-item">
+                    <a class="nav-menu-link" href="https://linkedin.com/in/vivek-sarvagod" target="_blank">
+                        <i class="bi bi-linkedin"></i>
+                        LinkedIn
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- User Info at bottom -->
+        <div class="nav-user">
+            <div class="nav-user-info">
+                <div class="nav-user-avatar">VS</div>
+                <div class="nav-user-details">
+                    <div class="name">Vivek Sarvagod</div>
+                    <div class="role">Software Architect</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==================== MAIN WRAPPER ==================== -->
+    <div class="main-wrapper">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <button class="menu-toggle" onclick="toggleNavPanel()">
+                    <i class="bi bi-list"></i>
+                </button>
+                <nav class="breadcrumb-nav">
+                    <a href="index.html">Home</a>
+                </nav>
+            </div>
+            <!-- <div class="header-right">
+                <button class="header-btn" title="Notifications">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-badge">2</span>
+                </button>
+                <button class="header-btn" title="Messages">
+                    <i class="bi bi-chat-dots"></i>
+                </button>
+                <button class="header-btn" title="Settings">
+                    <i class="bi bi-gear"></i>
+                </button>
+            </div> -->
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h1 class="welcome-title">Welcome to Dashboard</h1>
+                        <p class="welcome-subtitle">Software Architect Intern | Principal Software Engineer | MS in Information Systems Candidate</p>
+                        <p class="welcome-text">
+                            Hi, I'm Vivek Sarvagod, a software architect intern with 18+ years of experience in designing 
+                            scalable enterprise solutions. Currently pursuing my Master's degree at George Mason University 
+                            with a focus on AI and Machine Learning.
+                        </p>
+                        <div class="welcome-buttons">
+                            <a href="portfolio.html" class="btn btn-teal">
+                                <i class="bi bi-person-vcard me-2"></i>View Portfolio
+                            </a>
+                            <a href="contact.html" class="btn btn-outline-teal">
+                                <i class="bi bi-envelope me-2"></i>Contact Me
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center">
+                        <div class="welcome-avatar">
+                            <img src="./images/my-photo.jpeg" alt="Vivek Sarvagod" onerror="this.src='https://via.placeholder.com/200x200/009688/ffffff?text=VS'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-teal">
+                            <i class="bi bi-briefcase"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>18+</h3>
+                            <p>Years Experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-info">
+                            <i class="bi bi-cloud"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>50+</h3>
+                            <p>Projects Delivered</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-success">
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>MS</h3>
+                            <p>GMU (In Progress)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-warning">
+                            <i class="bi bi-award"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>10+</h3>
+                            <p>Certifications</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Cards -->
+            <h4 class="section-heading mb-4">Quick Navigation</h4>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <a href="portfolio.html" class="nav-card">
+                        <div class="nav-card-icon">
+                            <i class="bi bi-person-vcard"></i>
+                        </div>
+                        <h5>Portfolio</h5>
+                        <p>View my professional experience, skills, and education background.</p>
+                        <span class="nav-card-link">View Portfolio <i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="survey.html" class="nav-card">
+                        <div class="nav-card-icon">
+                            <i class="bi bi-clipboard-data"></i>
+                        </div>
+                        <h5>Student Survey</h5>
+                        <p>Complete the student survey form for campus feedback.</p>
+                        <span class="nav-card-link">Take Survey <i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="contact.html" class="nav-card">
+                        <div class="nav-card-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <h5>Contact</h5>
+                        <p>Get in touch with me for collaborations or inquiries.</p>
+                        <span class="nav-card-link">Contact Me <i class="bi bi-arrow-right"></i></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="page-footer">
+                <p class="mb-2">Connect with me</p>
+                <a href="https://github.com/vivek-sarvagod?tab=repositories"><i class="fa fa-github"></i></a>
+                <a href="https://linkedin.com/in/vivek-sarvagod"><i class="fa fa-linkedin"></i></a>
+                <a href="mailto:viveksarvagod@gmail.com"><i class="fa fa-envelope"></i></a>
+                <p class="mt-3 mb-0">© 2026 Vivek Sarvagod</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

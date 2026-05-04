@@ -1,0 +1,25 @@
+============================================================
+  Portal Survey — Rancher Academic Deployment
+============================================================
+
+Namespace: {{ .Values.global.namespace }}
+
+COMPONENTS:
+  MySQL  →  portal-survey-mysql  (ClusterIP, port 3306)
+  API    →  portal-survey-api    (NodePort {{ .Values.api.service.nodePort }})
+  UI     →  portal-survey-ui     (NodePort {{ .Values.ui.service.nodePort }})
+
+ACCESS YOUR APP:
+  UI:       http://<RANCHER_EC2_IP>:{{ .Values.ui.service.nodePort }}
+  API:      http://<RANCHER_EC2_IP>:{{ .Values.api.service.nodePort }}/health
+  Swagger:  http://<RANCHER_EC2_IP>:{{ .Values.api.service.nodePort }}/docs
+
+VERIFY:
+  kubectl get pods    -n {{ .Values.global.namespace }}
+  kubectl get svc     -n {{ .Values.global.namespace }}
+  kubectl get pvc     -n {{ .Values.global.namespace }}
+
+LOGS:
+  kubectl logs -l app.kubernetes.io/component=api      -n {{ .Values.global.namespace }} -f
+  kubectl logs -l app.kubernetes.io/component=ui       -n {{ .Values.global.namespace }} -f
+  kubectl logs -l app.kubernetes.io/component=database -n {{ .Values.global.namespace }} -f

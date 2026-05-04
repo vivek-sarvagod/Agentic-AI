@@ -1,0 +1,259 @@
+# ============================================================
+#  portal-survey — Helm Values (Rancher RKE2 / Academic)
+# ============================================================
+#
+#  SETUP:
+#    - Rancher RKE2 on existing EC2 (3.228.119.194)
+#    - Docker Hub for container images (no ECR)
+#    - MySQL runs as a pod (no RDS, $0 cost)
+#    - NodePort for external access
+#    - No HPA, no PDB, no NetworkPolicy (academic simplicity)
+#
+# ============================================================
+
+global:
+  namespace: portal-survey
+
+version: 2026.1.4
+
+# =============================================================
+#  MySQL (runs as a pod inside the cluster)
+# =============================================================
+# Rollback path:
+#   - Set mysql.enabled=true
+#   - Set externalDatabase.enabled=false
+#   - Keep api.secretEnv DB_USER/DB_PASSWORD pointing to MYSQL_USER/MYSQL_PASSWORD
+mysql:
+  enabled: false
+  image:
+    repository: mysql
+    tag: "8.0"
+    pullPolicy: IfNotPresent
+
+  rootPassword: "CompWelcome?1234"
+  database: portal_survey_db
+  user: appadmin
+  password: "Welcome1"
+
+  service:
+    port: 3306
+
+  storage:
+    size: 5Gi
+    storageClassName: ""    # uses default RKE2 local-path
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# =============================================================
+#  External MySQL (AWS RDS, etc.)
+# =============================================================
+# RDS path:
+#   - Set mysql.enabled=false
+#   - Set externalDatabase.enabled=true
+#   - Set host / port / database below
+#   - Either reference an existing K8s secret or let Helm create one
+externalDatabase:
+  enabled: true
+  host: "portal-survey-db.cygssanc4eeh.us-east-1.rds.amazonaws.com"
+  port: 3306
+  database: portal_survey_db
+
+  # Use an existing Kubernetes secret by default.
+  existingSecretName: portal-survey-db-secrets
+  usernameKey: DB_USER
+  passwordKey: DB_PASSWORD
+
+  # Set to true only if you want Helm to create the DB secret.
+  createSecret: true
+  user: "appadmin"
+  password: "CompWelcome?1234"
+
+# =============================================================
+#  API (FastAPI)
+# =============================================================
+api:
+  replicaCount: 1
+
+  image:
+    repository: viveksarvagod/portal-survey-api
+    pullPolicy: Always
+
+  service:
+    type: NodePort
+    port: 8000
+    targetPort: 8000
+    nodePort: 30081
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  env:
+    APP_NAME: portal-survey-api
+    APP_ENV: development
+    APP_DEBUG: "true"
+    APP_PORT: "8000"
+    APP_LOG_LEVEL: DEBUG
+    ALLOWED_ORIGINS: "*"
+    # Legacy in-cluster DB values kept here for quick rollback.
+    # If you revert to the pod-based MySQL model, uncomment these and
+    # set mysql.enabled=true plus externalDatabase.enabled=false.
+    # DB_HOST: portal-survey-mysql
+    # DB_PORT: "3306"
+    # DB_NAME: portal_survey_db
+    DB_POOL_SIZE: "5"
+    DB_MAX_OVERFLOW: "5"
+    JWT_ALGORITHM: HS256
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: "60"
+
+  secretEnv:
+    # Legacy in-cluster MySQL secret keys.
+    # For external RDS, the template switches DB_USER / DB_PASSWORD to
+    # externalDatabase.existingSecretName automatically when enabled=true.
+    DB_USER:
+      secretName: portal-survey-db-secrets
+      key: MYSQL_USER
+    DB_PASSWORD:
+      secretName: portal-survey-db-secrets
+      key: MYSQL_PASSWORD
+    JWT_SECRET_KEY:
+      secretName: portal-survey-app-secrets
+      key: JWT_SECRET_KEY
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 20
+    periodSeconds: 30
+    failureThreshold: 5
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8000
+    initialDelaySeconds: 15
+    periodSeconds: 15
+    failureThreshold: 3
+
+# =============================================================
+#  UI (React / Nginx)
+# =============================================================
+ui:
+  replicaCount: 1
+
+  image:
+    repository: viveksarvagod/portal-survey-ui
+    pullPolicy: Always
+
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8080
+    nodePort: 30082
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 30
+
+  readinessProbe:
+    httpGet:
+      path: /healthz
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 15
+
+# =============================================================
+#  Agent (LangGraph AI Agent Service)
+# =============================================================
+agent:
+  replicaCount: 1
+
+  image:
+    repository: viveksarvagod/portal-survey-agent
+    pullPolicy: Always
+  
+
+  service:
+    type: NodePort
+    port: 8001
+    targetPort: 8001
+    nodePort: 30083
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+
+  env:
+    AGENT_ENV: development
+    # API_BASE_URL and MCP_SERVER_URL are set automatically in the deployment
+    # to point to the internal portal-survey-api service
+    OPENAI_MODEL: gpt-4o-mini
+    ALLOWED_ORIGINS: "*"
+
+  secretEnv:
+    OPENAI_API_KEY:
+      secretName: portal-survey-app-secrets
+      key: OPENAI_API_KEY
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8001
+    initialDelaySeconds: 20
+    periodSeconds: 30
+    failureThreshold: 5
+
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8001
+    initialDelaySeconds: 15
+    periodSeconds: 15
+    failureThreshold: 3
+
+# =============================================================
+#  Ingress (Rancher Nginx Ingress — built into RKE2)
+# =============================================================
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+  host: ""    # empty = use IP directly
+
+# =============================================================
+# =============================================================
+#  Secrets
+# =============================================================
+secrets:
+  jwt_secret_key: "P4dVH7BYI2Ul9CWt94fKztnZC1fBKSg/RbTuZEcK/A8="
+  # Replace with your actual OpenAI API key
+  openai_api_key: "sk-your-openai-api-key-here"

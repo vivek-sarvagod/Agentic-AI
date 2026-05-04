@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-survey-agent
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey-agent
+    app.kubernetes.io/component: agent
+    app.kubernetes.io/part-of: portal-survey
+spec:
+  replicas: {{ .Values.agent.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: portal-survey-agent
+      app.kubernetes.io/component: agent
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: portal-survey-agent
+        app.kubernetes.io/component: agent
+        app.kubernetes.io/part-of: portal-survey
+    spec:
+      containers:
+        - name: agent
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.version }}"
+          imagePullPolicy: {{ .Values.agent.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.agent.service.targetPort }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.agent.env }}
+            {{- if ne $key "API_BASE_URL" }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            # Point to the internal API service
+            - name: API_BASE_URL
+              value: "http://portal-survey-api:{{ .Values.api.service.port }}"
+            - name: MCP_SERVER_URL
+              value: "http://portal-survey-api:{{ .Values.api.service.port }}/mcp"
+            {{- range $key, $ref := .Values.agent.secretEnv }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $ref.secretName }}
+                  key: {{ $ref.key }}
+            {{- end }}
+          livenessProbe:
+            {{- toYaml .Values.agent.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.agent.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.agent.resources | nindent 12 }}

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portal-survey-api
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app.kubernetes.io/name: portal-survey-api
+    app.kubernetes.io/component: api
+    app.kubernetes.io/part-of: portal-survey
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: portal-survey-api
+      app.kubernetes.io/component: api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: portal-survey-api
+        app.kubernetes.io/component: api
+        app.kubernetes.io/part-of: portal-survey
+    spec:
+      containers:
+        - name: api
+          image: "{{ .Values.api.image.repository }}:{{ .Values.version }}"
+          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.api.service.targetPort }}
+              protocol: TCP
+          env:
+            {{- range $key, $value := .Values.api.env }}
+            {{- if and (ne $key "DB_HOST") (ne $key "DB_PORT") (ne $key "DB_NAME") }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            # DB target switches between the in-cluster MySQL service and an external database.
+            - name: DB_HOST
+              value: {{ ternary .Values.externalDatabase.host "portal-survey-mysql" .Values.externalDatabase.enabled | quote }}
+            - name: DB_PORT
+              value: {{ ternary (.Values.externalDatabase.port | toString) "3306" .Values.externalDatabase.enabled | quote }}
+            - name: DB_NAME
+              value: {{ ternary .Values.externalDatabase.database .Values.mysql.database .Values.externalDatabase.enabled | quote }}
+            {{- range $key, $ref := .Values.api.secretEnv }}
+            {{- if and (ne $key "DB_USER") (ne $key "DB_PASSWORD") }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $ref.secretName }}
+                  key: {{ $ref.key }}
+            {{- end }}
+            {{- end }}
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ ternary .Values.externalDatabase.existingSecretName .Values.api.secretEnv.DB_USER.secretName .Values.externalDatabase.enabled }}
+                  key: {{ ternary .Values.externalDatabase.usernameKey .Values.api.secretEnv.DB_USER.key .Values.externalDatabase.enabled }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ ternary .Values.externalDatabase.existingSecretName .Values.api.secretEnv.DB_PASSWORD.secretName .Values.externalDatabase.enabled }}
+                  key: {{ ternary .Values.externalDatabase.passwordKey .Values.api.secretEnv.DB_PASSWORD.key .Values.externalDatabase.enabled }}
+          livenessProbe:
+            {{- toYaml .Values.api.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.api.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}

@@ -1,0 +1,444 @@
+<!--
+    File: error.html
+    Author: Vivek Sarvagod
+    Course: [Course Name] - George Mason University
+    Date: February 2025
+    
+    Purpose: This is the custom 404 error page displayed when users navigate to 
+    a non-existent page. It provides a professional error message and navigation 
+    options to return to the main site.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found | Vivek Sarvagod</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal: #009688;
+            --teal-dark: #00796b;
+            --teal-light: #4db6ac;
+            --dark-color: #263238;
+            --darker-color: #1c2529;
+            --text-color: #546e7a;
+            --text-light: #90a4ae;
+            --light-bg: #eceff1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--darker-color) 0%, var(--dark-color) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-animation span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(0, 150, 136, 0.1);
+            animation: move 25s infinite;
+            bottom: -150px;
+            border-radius: 50%;
+        }
+
+        .bg-animation span:nth-child(1) {
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .bg-animation span:nth-child(2) {
+            left: 20%;
+            width: 40px;
+            height: 40px;
+            animation-delay: 2s;
+            animation-duration: 25s;
+        }
+
+        .bg-animation span:nth-child(3) {
+            left: 35%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 4s;
+        }
+
+        .bg-animation span:nth-child(4) {
+            left: 50%;
+            width: 100px;
+            height: 100px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .bg-animation span:nth-child(5) {
+            left: 65%;
+            width: 50px;
+            height: 50px;
+            animation-delay: 3s;
+        }
+
+        .bg-animation span:nth-child(6) {
+            left: 75%;
+            width: 70px;
+            height: 70px;
+            animation-delay: 5s;
+            animation-duration: 22s;
+        }
+
+        .bg-animation span:nth-child(7) {
+            left: 85%;
+            width: 90px;
+            height: 90px;
+            animation-delay: 7s;
+            animation-duration: 30s;
+        }
+
+        .bg-animation span:nth-child(8) {
+            left: 5%;
+            width: 45px;
+            height: 45px;
+            animation-delay: 10s;
+            animation-duration: 35s;
+        }
+
+        @keyframes move {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1500px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .error-container {
+            text-align: center;
+            z-index: 1;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        /* Error Code */
+        .error-code {
+            font-size: 180px;
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .error-code::after {
+            content: '404';
+            position: absolute;
+            left: 5px;
+            top: 5px;
+            z-index: -1;
+            background: linear-gradient(135deg, rgba(0, 150, 136, 0.3), rgba(77, 182, 172, 0.3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Error Icon */
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 3rem;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0, 150, 136, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 15px 35px rgba(0, 150, 136, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 20px 45px rgba(0, 150, 136, 0.5);
+            }
+        }
+
+        /* Text Content */
+        .error-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .error-message {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        /* Buttons */
+        .error-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-home {
+            background: linear-gradient(135deg, var(--teal), var(--teal-light));
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 150, 136, 0.3);
+        }
+
+        .btn-home:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 150, 136, 0.4);
+            color: white;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--text-light);
+            padding: 13px 35px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .quick-links-title {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .quick-links-list {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .quick-links-list a {
+            color: var(--teal-light);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-links-list a:hover {
+            color: #fff;
+        }
+
+        /* Footer */
+        .error-footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+
+        .error-footer a {
+            color: var(--teal-light);
+            text-decoration: none;
+        }
+
+        .error-footer a:hover {
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 120px;
+            }
+
+            .error-icon {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+
+            .error-title {
+                font-size: 1.5rem;
+            }
+
+            .error-message {
+                font-size: 1rem;
+            }
+
+            .error-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-home, .btn-back {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 100px;
+            }
+
+            .quick-links-list {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- Error Content -->
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        
+        <div class="error-code">404</div>
+        
+        <h1 class="error-title">Oops! Page Not Found</h1>
+        
+        <p class="error-message">
+            The page you are looking for might have been removed, had its name changed, 
+            or is temporarily unavailable. Let's get you back on track.
+        </p>
+
+        <div class="error-buttons">
+            <a href="index.html" class="btn-home">
+                <i class="bi bi-house-door"></i>
+                Go to Homepage
+            </a>
+            <a href="javascript:history.back()" class="btn-back">
+                <i class="bi bi-arrow-left"></i>
+                Go Back
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="quick-links">
+            <div class="quick-links-title">Or try these pages</div>
+            <div class="quick-links-list">
+                <a href="portfolio.html">
+                    <i class="bi bi-person-badge"></i>
+                    Portfolio
+                </a>
+                <a href="survey.html">
+                    <i class="bi bi-clipboard-data"></i>
+                    Survey
+                </a>
+                <a href="contact.html">
+                    <i class="bi bi-envelope"></i>
+                    Contact
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="error-footer">
+        <p>© 2026 <a href="index.html">Vivek Sarvagod</a> | George Mason University</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
