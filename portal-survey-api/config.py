@@ -1,3 +1,4 @@
+import sys
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -43,4 +44,15 @@ class Settings(BaseSettings):
         )
 
 
-settings = Settings()
+# Initialize settings with error handling
+try:
+    settings = Settings()
+    print(f"✓ Configuration loaded successfully")
+    print(f"  - DB_HOST: {settings.DB_HOST}")
+    print(f"  - DB_PORT: {settings.DB_PORT}")
+    print(f"  - DB_NAME: {settings.DB_NAME}")
+    print(f"  - DB_USER: {settings.DB_USER}")
+    print(f"  - APP_ENV: {settings.APP_ENV}")
+except Exception as e:
+    print(f"✗ Configuration error: {e}", file=sys.stderr)
+    sys.exit(1)

@@ -19,7 +19,12 @@ class Settings(BaseSettings):
     # ── Service URLs ──────────────────────────────────────────────
     # Must point to your running portal-survey-api instance
     API_BASE_URL: str = "http://localhost:8000"
-    MCP_SERVER_URL: str = "http://localhost:8000/mcp"
+    MCP_SERVER_URL: str = "http://localhost:8002/sse"
+
+    # ── MCP vs REST API ───────────────────────────────────────────
+    # Set to True to use MCP server (requires SSE transport)
+    # Set to False to use REST API (default, recommended)
+    USE_MCP_TOOLS: bool = False
 
     # ── CORS ──────────────────────────────────────────────────────
     # In development: "*"

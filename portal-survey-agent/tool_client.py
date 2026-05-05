@@ -1,4 +1,3 @@
-import os
 from typing import Any
 
 import httpx
@@ -13,7 +12,7 @@ class SurveyToolClient:
 
     async def call(self, tool_name: str, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
         arguments = arguments or {}
-        if os.getenv("USE_MCP_TOOLS", "false").lower() == "true":
+        if settings.USE_MCP_TOOLS:
             try:
                 return await self._call_mcp(tool_name, arguments)
             except Exception:

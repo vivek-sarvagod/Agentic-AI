@@ -14,7 +14,7 @@
 global:
   namespace: portal-survey
 
-version: 2026.1.4
+version: 2026.1.8
 
 # =============================================================
 #  MySQL (runs as a pod inside the cluster)
@@ -134,17 +134,19 @@ api:
     httpGet:
       path: /health
       port: 8000
-    initialDelaySeconds: 20
+    initialDelaySeconds: 30
     periodSeconds: 30
     failureThreshold: 5
+    timeoutSeconds: 5
 
   readinessProbe:
     httpGet:
       path: /health
       port: 8000
-    initialDelaySeconds: 15
+    initialDelaySeconds: 25
     periodSeconds: 15
     failureThreshold: 3
+    timeoutSeconds: 5
 
 # =============================================================
 #  UI (React / Nginx)
