@@ -1,4 +1,4 @@
-# SWE645 Extra Credit: Agentic Student Survey System
+# Agentic Student Survey System
 
 Group: Vivek Sarvagod / Sudhir Chaudhary
 
