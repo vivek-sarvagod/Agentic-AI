@@ -44,6 +44,9 @@ docs/                    Architecture, design, and demo documentation
 
 - **Python 3.11+**: Install via Homebrew: `brew install python@3.11`
 - **Node.js 18+**: Install via Homebrew: `brew install node`
+- **MySQL Server & Workbench**: MySQL 8.0 instance (local or AWS RDS)
+- ***Configure database end points***
+- ***Create “portal_db” on MySQL server***
 - **Docker**: Install Docker Desktop for Mac
 - **Git**: Install via Homebrew: `brew install git`
 
@@ -51,44 +54,30 @@ docs/                    Architecture, design, and demo documentation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/sudhirchaudhary0903-art/SWE645-Extra.git
-   cd SWE645-Extra
+   git clone https://github.com/vivek-sarvagod/Agentic-AI.git
+   cd Agentic-AI
    ```
 
-2. **Start MySQL Database:**
-   ```bash
-   docker run -d \
-     --name portal-survey-mysql \
-     -e MYSQL_ROOT_PASSWORD=rootpassword \
-     -e MYSQL_DATABASE=portal_survey_db \
-     -e MYSQL_USER=appadmin \
-     -e MYSQL_PASSWORD=Welcome1 \
-     -p 3306:3306 \
-     mysql:8.0
-   ```
-
-3. **Setup and Start API Service:**
+2. **Setup and Start API Service:**
    ```bash
    cd portal-survey-api
    python -m venv venv
    source ./venv/bin/activate
    pip install --upgrade pip
    pip install -r requirements.txt
-   cp env.example .env
+  
    python -m uvicorn main:app --host 127.0.0.1 --port 8000
    ```
    Keep this terminal running.
 
-4. **Setup and Start Agent Service (New Terminal):**
+3. **Setup and Start Agent Service (New Terminal):**
    ```bash
    cd portal-survey-agent
    python -m venv venv
    source ./venv/bin/activate
-    pip install --upgrade pip
-   pip install -r requirements.txt
-   export API_BASE_URL=http://localhost:8000
-   export MCP_SERVER_URL=http://localhost:8000/mcp
-   # Optional: export OPENAI_API_KEY=your_key_here
+   pip install --upgrade pip
+   pip install -r requirements.txt   
+  
    python -m uvicorn main:app --reload --port 8001
    ```
    Keep this terminal running.
@@ -97,15 +86,15 @@ docs/                    Architecture, design, and demo documentation
    ```bash
    cd portal-survey-ui
    npm install
-   VITE_API_BASE_URL=http://localhost:8000 \
-   VITE_AGENT_BASE_URL=http://localhost:8001 \
+   
    npm run dev
    ```
    Keep this terminal running.
 
 6. **Access the Application:**
    - **UI**: http://localhost:3000
-   - **API Health**: http://127.0.0.1:8000/health
+   - **API**: http://127.0.0.1:8000/docs
+   - **MCP**: http://127.0.0.1:8000/mcp
    - **Agent Health**: http://127.0.0.1:8001/health
 
 ### Troubleshooting (macOS)
